@@ -18,7 +18,7 @@ class PlaylistCreator:
         lastfm_api_secret: typing.Optional[str] = None,
         spotipy_client_id: typing.Optional[str] = None,
         spotipy_client_secret: typing.Optional[str] = None,
-        spotipy_redirect_uri: str = "https://developers.spotify.com/callback",
+        spotipy_redirect_uri: typing.Optional[str] = None,
     ):
         self.period = period
         self.limit = limit
@@ -31,9 +31,9 @@ class PlaylistCreator:
         )
         self.sp = spotipy.Spotify(
             auth_manager=SpotifyOAuth(
-                client_id=spotipy_client_id,
-                client_secret=spotipy_client_secret,
-                redirect_uri=spotipy_redirect_uri,
+                client_id=spotipy_client_id or os.environ["SPOTIPY_CLIENT_ID"],
+                client_secret=spotipy_client_secret or os.environ["SPOTIPY_CLIENT_SECRET"],
+                redirect_uri=spotipy_redirect_uri or os.environ["SPOTIPY_REDIRECT_URI"],
                 scope="playlist-modify-public",
             )
         )

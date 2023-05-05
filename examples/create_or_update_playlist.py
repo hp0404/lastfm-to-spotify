@@ -1,9 +1,10 @@
+# -*- coding: utf-8 -*-
 from lastfm_to_spotify import PlaylistCreator
 
 
 def main() -> None:
     playlist_creator = PlaylistCreator(
-        lastfm_username="hp0404", 
+        lastfm_username="hp0404",
         playlist_name="HP - Past Sounds - test",
         period="3month",
         limit=15,
@@ -11,7 +12,8 @@ def main() -> None:
         lastfm_api_key="...",
         lastfm_api_secret="...",
         spotipy_client_id="...",
-        spotipy_client_secret="..."
+        spotipy_client_secret="...",
+        spotipy_redirect_uri="...",
     )
     playlist_creator.create_or_update_playlist()
 

@@ -39,7 +39,7 @@ def main() -> None:
         lastfm_username=args.username,
         playlist_name=args.playlist,
         period=args.period,
-        limit=args.limit
+        limit=args.limit,
     )
     playlist_creator.create_or_update_playlist()
 
