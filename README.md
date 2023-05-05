@@ -14,6 +14,11 @@ $ . env/bin/activate
 $ pip install .
 ```
 
+Alternatively, instead of pip you could use poetry:
+```terminal
+$ poetry install
+```
+
 ## Usage
 
 Here's a short example of how to use Playlist Creator:
@@ -47,9 +52,14 @@ playlist_creator = PlaylistCreator(
 
 You can also use command-line interface, see `--help` for more:
 ```terminal
-lastfm-to-spotify --username hp0404 --playlist "Top Tracks May 2023" --period "1month" --limit 7
+$ lastfm-to-spotify --username hp0404 --playlist "Top Tracks May 2023" --period "1month" --limit 7
 ```
 
+or
+
+```terminal
+$ poetry run lastfm-to-spotify --username hp0404 --playlist "Top Tracks May 2023" --period "1month" --limit 7
+```
 
 ## Dependencies
 - `pylast` (for Last.fm API access)
