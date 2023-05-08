@@ -21,16 +21,19 @@ $ poetry install
 
 ## Usage
 
-Here's a short example of how to use Playlist Creator:
+Here's a short example of how to use Playlist (see more examples [here](./examples/)):
 
 ```python
-from lastfm_to_spotify import PlaylistCreator
+from lastfm_to_spotify import Playlist
 
-username = "myusername"
-playlist_name = "My Top Tracks"
 
-playlist_creator = PlaylistCreator(lastfm_username, playlist_name)
-playlist_creator.create_or_update_playlist()
+playlist_creator = Playlist(lastfm_username, playlist_name)
+playlist_creator.create_playlist(
+    lastfm_username="hp0404",
+    playlist="Top Tracks",
+    limit=30,
+    period="3month",
+)
 ```
 
 This code will create a new Spotify playlist called "My Top Tracks" (if it doesn't already exist) and add the user's top tracks from the last 3 months.
@@ -39,9 +42,7 @@ Note that the example above assumes you have environment variables set up, but y
 
 ```python
 ...
-playlist_creator = PlaylistCreator(
-    lastfm_username,
-    playlist_name,
+playlist_creator = Playlist(
     lastfm_api_key="...",
     lastfm_api_secret="...",
     spotipy_client_id="...",
@@ -52,18 +53,19 @@ playlist_creator = PlaylistCreator(
 
 You can also use command-line interface, see `--help` for more:
 ```terminal
-$ lastfm-to-spotify --username hp0404 --playlist "Top Tracks May 2023" --period "1month" --limit 7
+$ lastfm-to-spotify update --username hp0404 --playlist "Top Tracks May 2023" --limit 5
 ```
 
 or
 
 ```terminal
-$ poetry run lastfm-to-spotify --username hp0404 --playlist "Top Tracks May 2023" --period "1month" --limit 7
+$ poetry run lastfm-to-spotify update --username hp0404 --playlist "Top Tracks May 2023" --limit 5
 ```
 
 ## Dependencies
 - `pylast` (for Last.fm API access)
 - `spotipy` (for Spotify API access)
+- `typer` (for CLI)
 
 ## Configuration
 In order to use the Spotify API, you need to have a Spotify account and create a Spotify app to obtain a client ID and client secret. 
