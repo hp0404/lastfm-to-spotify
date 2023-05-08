@@ -1,47 +1,75 @@
 # -*- coding: utf-8 -*-
-import argparse
-from . import PlaylistCreator
+import typer
+from . import Playlist
+
+app = typer.Typer()
 
 
-def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Create a Spotify playlist from top LastFM tracks."
-    )
-    parser.add_argument(
-        "-u",
-        "--username",
-        required=True,
-        help="The LastFM username to fetch top tracks.",
-    )
-    parser.add_argument(
-        "-n",
-        "--playlist",
-        required=True,
-        help="The name of the Spotify playlist to create or update.",
-    )
-    parser.add_argument(
+@app.command()
+def create(
+    username: str = typer.Option(
+        ..., "-u", "--username", help="The LastFM username to fetch top tracks."
+    ),
+    playlist: str = typer.Option(
+        ..., "-n", "--playlist", help="The name of the Spotify playlist to create."
+    ),
+    period: str = typer.Option(
+        "3month",
         "-p",
         "--period",
-        default="3month",
-        choices=["overall", "7day", "1month", "3month", "6month", "12month"],
         help="The time period to consider for top tracks.",
+        show_choices=True,
+        case_sensitive=False,
+    ),
+    limit: int = typer.Option(
+        30, "-l", "--limit", help="The number of top tracks to include in the playlist."
+    ),
+):
+    """Create a Spotify playlist from top LastFM tracks"""
+    playlist_wrapper = Playlist()
+    playlist_wrapper.create_playlist(
+        lastfm_username=username, playlist=playlist, period=period, limit=limit
     )
-    parser.add_argument(
-        "-l",
-        "--limit",
-        type=int,
-        default=30,
-        help="The number of top tracks to include in the playlist.",
-    )
-    args = parser.parse_args()
 
-    playlist_creator = PlaylistCreator(
-        lastfm_username=args.username,
-        playlist_name=args.playlist,
-        period=args.period,
-        limit=args.limit,
+
+@app.command()
+def update(
+    username: str = typer.Option(
+        ..., "-u", "--username", help="The LastFM username to fetch top tracks."
+    ),
+    playlist: str = typer.Option(
+        ..., "-n", "--playlist", help="The name of the Spotify playlist to update."
+    ),
+    period: str = typer.Option(
+        "3month",
+        "-p",
+        "--period",
+        help="The time period to consider for top tracks.",
+        show_choices=True,
+        case_sensitive=False,
+    ),
+    limit: int = typer.Option(
+        30, "-l", "--limit", help="The number of top tracks to include in the playlist."
+    ),
+    replace: bool = typer.Option(
+        False,
+        "--replace",
+        help="Replace existing tracks in the playlist instead of adding to them.",
+    ),
+):
+    """Update a Spotify playlist from top LastFM tracks"""
+    playlist_wrapper = Playlist()
+    playlist_wrapper.update_playlist(
+        lastfm_username=username,
+        playlist=playlist,
+        period=period,
+        limit=limit,
+        replace_existing_tracks=replace,
     )
-    playlist_creator.create_or_update_playlist()
+
+
+def main():
+    app()
 
 
 if __name__ == "__main__":
