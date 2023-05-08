@@ -27,7 +27,7 @@ Here's a short example of how to use Playlist (see more examples [here](./exampl
 from lastfm_to_spotify import Playlist
 
 
-playlist_creator = Playlist(lastfm_username, playlist_name)
+playlist_creator = Playlist()
 playlist_creator.create_playlist(
     lastfm_username="hp0404",
     playlist="Top Tracks",
