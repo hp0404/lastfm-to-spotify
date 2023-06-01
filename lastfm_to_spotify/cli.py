@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import typer
+
 from . import Playlist
 
 app = typer.Typer()

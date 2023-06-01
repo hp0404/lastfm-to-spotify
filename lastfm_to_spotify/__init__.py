@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import typing
+from pathlib import Path
 
 import pylast
 import spotipy
@@ -10,6 +11,7 @@ from spotipy.oauth2 import SpotifyOAuth
 class Playlist:
     def __init__(
         self,
+        cache_path: typing.Optional[Path] = None,
         lastfm_api_key: typing.Optional[str] = None,
         lastfm_api_secret: typing.Optional[str] = None,
         spotipy_client_id: typing.Optional[str] = None,
@@ -18,25 +20,36 @@ class Playlist:
     ):
         self.lastfm_api_key = lastfm_api_key or os.environ["LASTFM_API_KEY"]
         self.lastfm_api_secret = lastfm_api_secret or os.environ["LASTFM_API_SECRET"]
-        self.spotipy_client_id = spotipy_client_id or os.environ["SPOTIPY_CLIENT_ID"]
-        self.spotipy_client_secret = (
-            spotipy_client_secret or os.environ["SPOTIPY_CLIENT_SECRET"]
-        )
-        self.spotipy_redirect_uri = (
-            spotipy_redirect_uri or os.environ["SPOTIPY_REDIRECT_URI"]
-        )
+
+        if cache_path and cache_path.exists():
+            self.sp = spotipy.Spotify(
+                auth_manager=SpotifyOAuth(
+                    scope="playlist_modify_public", cache_path=cache_path
+                )
+            )
+        else:
+            self.spotipy_client_id = (
+                spotipy_client_id or os.environ["SPOTIPY_CLIENT_ID"]
+            )
+            self.spotipy_client_secret = (
+                spotipy_client_secret or os.environ["SPOTIPY_CLIENT_SECRET"]
+            )
+            self.spotipy_redirect_uri = (
+                spotipy_redirect_uri or os.environ["SPOTIPY_REDIRECT_URI"]
+            )
+            self.sp = spotipy.Spotify(
+                auth_manager=SpotifyOAuth(
+                    client_id=self.spotipy_client_id,
+                    client_secret=self.spotipy_client_secret,
+                    redirect_uri=self.spotipy_redirect_uri,
+                    scope="playlist-modify-public",
+                )
+            )
+
+        self.user_id: str = self.sp.me()["id"]
         self.network = pylast.LastFMNetwork(
             api_key=self.lastfm_api_key, api_secret=self.lastfm_api_secret
         )
-        self.sp = spotipy.Spotify(
-            auth_manager=SpotifyOAuth(
-                client_id=self.spotipy_client_id,
-                client_secret=self.spotipy_client_secret,
-                redirect_uri=self.spotipy_redirect_uri,
-                scope="playlist-modify-public",
-            )
-        )
-        self.user_id: str = self.sp.me()["id"]
 
     def get_lastfm_tracks(
         self, lastfm_username: str, period: str = "3month", limit: int = 30
